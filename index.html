@@ -6,232 +6,210 @@
 <title>Diva ❤️</title>
 
 <style>
-  body{
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    background: linear-gradient(135deg, #fde2e4, #fff);
-    overflow:hidden;
-  }
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: linear-gradient(135deg, #fde2e4, #fff);
+  overflow:hidden;
+}
 
-  /* Slideshow background */
-  .slideshow{
-    position:fixed;
-    inset:0;
-    z-index:0;
-    display:none;
-  }
-  .slide{
-    position:absolute;
-    inset:0;
-    background-size:cover;
-    background-position:center;
-    opacity:0;
-    transition:opacity 2s ease-in-out;
-    filter:brightness(.85);
-  }
-  .slide.active{ opacity:1; }
+/* Slideshow */
+.slideshow{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  display:none;
+}
+.slide{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  opacity:0;
+  transition:opacity 2s ease-in-out;
+  filter:brightness(.85);
+}
+.slide.active{ opacity:1; }
 
-  /* Card */
-  .card{
-    position:relative;
-    z-index:2;
-    width:min(520px, 92vw);
-    background:#fff;
-    border-radius:22px;
-    padding:34px 28px;
-    box-shadow:0 15px 40px rgba(0,0,0,.15);
-    text-align:center;
-    transition: opacity 1.2s ease;
-  }
-  h1{ margin:0 0 10px; font-size:28px; }
-  p{ margin:0 0 18px; opacity:.85; font-size:17px; }
+/* Card */
+.card{
+  position:relative;
+  z-index:2;
+  width:min(500px, 92vw);
+  background:white;
+  padding:36px;
+  border-radius:22px;
+  box-shadow:0 15px 40px rgba(0,0,0,.15);
+  text-align:center;
+  transition: opacity 1.2s ease;
+}
 
-  .btns{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+h1{ margin:0 0 12px; font-size:28px; }
+p{ margin:0 0 22px; font-size:17px; opacity:.85; }
 
-  button{
-    border:0;
-    padding:12px 20px;
-    border-radius:14px;
-    font-size:16px;
-    cursor:pointer;
-    box-shadow:0 6px 16px rgba(0,0,0,.15);
-  }
-  #yes{ background:#ff4d6d; color:#fff; }
-  #no{ background:#f2f2f2; }
+.btns{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+}
 
-  #msg{
-    margin-top:16px;
-    font-size:18px;
-    font-weight:600;
-    display:none;
-  }
+button{
+  border:0;
+  padding:12px 22px;
+  border-radius:14px;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.15);
+}
 
-  /* Music fallback button */
-  #playBtn{
-    display:none;
-    margin-top:14px;
-    background:#111;
-    color:#fff;
-  }
+#yes{ background:#ff4d6d; color:white; }
+#no{ background:#f2f2f2; }
 
-  /* Final line (ONLY shown after card fades) */
-  .final-line{
-    position:fixed;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:32px;
-    font-weight:700;
-    color:#fff;
-    text-align:center;
-    opacity:0;
-    transition:opacity 2.5s ease;
-    z-index:3;
-    text-shadow:0 6px 26px rgba(0,0,0,.65);
-    padding:24px;
-    pointer-events:none;
-  }
+#msg{
+  margin-top:16px;
+  font-size:18px;
+  font-weight:600;
+  display:none;
+}
 
-  /* Hearts */
-  .heart{
-    position:fixed;
-    font-size:20px;
-    animation: floatUp 3s ease forwards;
-    pointer-events:none;
-    z-index:4;
-  }
-  @keyframes floatUp{
-    from{ transform:translateY(0) scale(1); opacity:1; }
-    to{ transform:translateY(-160px) scale(1.4); opacity:0; }
-  }
+/* Final line */
+.final-line{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  font-weight:700;
+  color:white;
+  text-align:center;
+  opacity:0;
+  transition:opacity 2.5s ease;
+  z-index:3;
+  text-shadow:0 6px 26px rgba(0,0,0,.65);
+  pointer-events:none;
+}
+
+/* Hearts */
+.heart{
+  position:fixed;
+  font-size:20px;
+  animation: floatUp 3s ease forwards;
+  pointer-events:none;
+  z-index:4;
+}
+
+@keyframes floatUp{
+  from{ transform:translateY(0); opacity:1;}
+  to{ transform:translateY(-160px); opacity:0;}
+}
 </style>
 </head>
 
 <body>
 
-  <div class="slideshow" id="slideshow">
-    <div class="slide" style="background-image:url('img1.jpg')"></div>
-    <div class="slide" style="background-image:url('img2.jpg')"></div>
-    <div class="slide" style="background-image:url('img3.jpg')"></div>
-    <div class="slide" style="background-image:url('img4.jpg')"></div>
-    <div class="slide" style="background-image:url('img5.jpg')"></div>
+<div class="slideshow" id="slideshow">
+  <div class="slide" style="background-image:url('img1.jpg')"></div>
+  <div class="slide" style="background-image:url('img2.jpg')"></div>
+  <div class="slide" style="background-image:url('img3.jpg')"></div>
+  <div class="slide" style="background-image:url('img4.jpg')"></div>
+  <div class="slide" style="background-image:url('img5.jpg')"></div>
+</div>
+
+<audio id="music" src="song.mp3"></audio>
+
+<div class="card" id="card">
+  <h1>Diva ❤️</h1>
+  <p>After 2 beautiful years… will you be my Valentine?</p>
+
+  <div class="btns">
+    <button id="yes">Yes, always 💘</button>
+    <button id="no">No 😅</button>
   </div>
 
-  <audio id="music" src="song.mp3" preload="auto"></audio>
+  <div id="msg"></div>
+</div>
 
-  <div class="card" id="card">
-    <h1>Diva ❤️</h1>
-    <p>After 2 beautiful years… will you be my Valentine?</p>
-
-    <div class="btns">
-      <button id="yes">Yes, always 💘</button>
-      <button id="no">No 😅</button>
-    </div>
-
-    <div id="msg"></div>
-    <button id="playBtn">Play the song 🎶</button>
-  </div>
-
-  <div class="final-line" id="finalLine">
-    Year 3 with Diva… here we go. ❤️
-  </div>
+<div class="final-line" id="finalLine">
+  Year 3 with Diva… here we go. ❤️
+</div>
 
 <script>
-  const noBtn = document.getElementById("no");
-  const yesBtn = document.getElementById("yes");
-  const msg = document.getElementById("msg");
-  const music = document.getElementById("music");
-  const playBtn = document.getElementById("playBtn");
-  const slideshow = document.getElementById("slideshow");
-  const slides = document.querySelectorAll(".slide");
-  const card = document.getElementById("card");
-  const finalLine = document.getElementById("finalLine");
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const card = document.getElementById("card");
+const slideshow = document.getElementById("slideshow");
+const slides = document.querySelectorAll(".slide");
+const music = document.getElementById("music");
+const msg = document.getElementById("msg");
+const finalLine = document.getElementById("finalLine");
 
-  // No button runs away (hover)
-  noBtn.addEventListener("mouseenter", () => {
-    const pad = 20;
-    const maxX = window.innerWidth - noBtn.offsetWidth - pad;
-    const maxY = window.innerHeight - noBtn.offsetHeight - pad;
-    noBtn.style.position = "fixed";
-    noBtn.style.left = Math.max(pad, Math.random() * maxX) + "px";
-    noBtn.style.top  = Math.max(pad, Math.random() * maxY) + "px";
-  });
+noBtn.addEventListener("mouseenter", () => {
+  const pad = 20;
+  const maxX = window.innerWidth - noBtn.offsetWidth - pad;
+  const maxY = window.innerHeight - noBtn.offsetHeight - pad;
+  noBtn.style.position = "fixed";
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top  = Math.random() * maxY + "px";
+});
 
-  function tryPlayMusic(){
-    music.volume = 0.8; // set target
-    const p = music.play();
-    if (p && typeof p.then === "function") {
-      p.then(() => {
-        playBtn.style.display = "none";
-      }).catch(() => {
-        // Browser blocked it -> show fallback play button
-        playBtn.style.display = "inline-block";
-      });
-    }
-  }
+yesBtn.addEventListener("click", () => {
 
-  playBtn.addEventListener("click", () => {
-    tryPlayMusic();
-  });
+  // Hide No button immediately
+  noBtn.style.display = "none";
 
-  yesBtn.addEventListener("click", () => {
-    // Start background slideshow
-    slideshow.style.display = "block";
+  // Start slideshow
+  slideshow.style.display = "block";
+  let i = 0;
+  slides[i].classList.add("active");
 
-    // Start slideshow loop
-    let i = 0;
-    slides.forEach(s => s.classList.remove("active"));
+  setInterval(() => {
+    slides[i].classList.remove("active");
+    i = (i + 1) % slides.length;
     slides[i].classList.add("active");
-    setInterval(() => {
-      slides[i].classList.remove("active");
-      i = (i + 1) % slides.length;
-      slides[i].classList.add("active");
-    }, 4000);
+  }, 4000);
 
-    // Hide No + change Yes
-    noBtn.style.display = "none";
-    yesBtn.textContent = "Forever ♾️";
-    yesBtn.disabled = true;
+  // Play music (user click allows it)
+  music.volume = 0.8;
+  music.play().catch(() => {});
 
-    // Message
-    msg.style.display = "block";
-    msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
+  // Show message
+  msg.style.display = "block";
+  msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
 
-    // Try play music (Brave may block; fallback button appears)
-    tryPlayMusic();
+  // Fade card
+  setTimeout(() => {
+    card.style.opacity = "0";
+  }, 2500);
 
-    // Hearts
-    popHearts();
+  // Remove card completely
+  setTimeout(() => {
+    card.style.display = "none";
+  }, 3700);
 
-    // Fade card out AFTER a moment
-    setTimeout(() => {
-      card.style.opacity = "0";
-      // remove it from layout so final line never overlaps
-      setTimeout(() => { card.style.display = "none"; }, 1300);
-    }, 2800);
+  // Show final line AFTER card is gone
+  setTimeout(() => {
+    finalLine.style.opacity = "1";
+  }, 4500);
 
-    // Show final line after card is gone
-    setTimeout(() => {
-      finalLine.style.opacity = "1";
-    }, 4500);
-  });
+  popHearts();
+});
 
-  function popHearts(){
-    for(let i=0;i<25;i++){
-      const h = document.createElement("div");
-      h.className = "heart";
-      h.textContent = ["❤️","💖","💘","💕"][Math.floor(Math.random()*4)];
-      h.style.left = Math.random()*100 + "%";
-      h.style.top = "70%";
-      document.body.appendChild(h);
-      setTimeout(()=>h.remove(), 3000);
-    }
+function popHearts(){
+  for(let i=0;i<25;i++){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = ["❤️","💖","💘","💕"][Math.floor(Math.random()*4)];
+    h.style.left = Math.random()*100 + "%";
+    h.style.top = "70%";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(), 3000);
   }
+}
 </script>
 
 </body>
