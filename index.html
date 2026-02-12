@@ -37,7 +37,7 @@ body{
 .card{
   position:relative;
   z-index:2;
-  width:min(500px, 92vw);
+  width:min(520px, 92vw);
   background:white;
   padding:36px;
   border-radius:22px;
@@ -74,6 +74,18 @@ button{
   display:none;
 }
 
+/* show a tiny test player so you can confirm file loads */
+.test-audio{
+  margin-top:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:center;
+  font-size:13px;
+  opacity:.85;
+}
+.test-audio a{ color:#ff4d6d; text-decoration:none; font-weight:600; }
+
 .final-line{
   position:fixed;
   inset:0;
@@ -103,9 +115,8 @@ button{
   <div class="slide" style="background-image:url('img5.jpg')"></div>
 </div>
 
-<!-- Background Music -->
 <audio id="bgm" preload="auto" loop>
-  <source src="./music.mp3" type="audio/mpeg">
+  <source src="./song.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card" id="card">
@@ -115,6 +126,12 @@ button{
   <div class="btns">
     <button id="yes">Yes, always 💘</button>
     <button id="no">No 😅</button>
+  </div>
+
+  <div class="test-audio">
+    <div>Music test (should work if the file is hosted correctly):</div>
+    <audio controls preload="none" src="./song.mp3"></audio>
+    <a href="./song.mp3" target="_blank" rel="noopener">Open song.mp3 directly</a>
   </div>
 
   <div id="msg"></div>
@@ -144,10 +161,8 @@ noBtn.addEventListener("mouseenter", () => {
 });
 
 yesBtn.addEventListener("click", async () => {
-
   noBtn.style.display = "none";
 
-  // Start slideshow
   slideshow.style.display = "block";
   let i = 0;
   slides[i].classList.add("active");
@@ -161,12 +176,12 @@ yesBtn.addEventListener("click", async () => {
   msg.style.display = "block";
   msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
 
-  // Play music (Brave-safe because it's inside click)
   try {
     bgm.volume = 0.7;
     await bgm.play();
   } catch (e) {
-    console.error("Audio blocked:", e);
+    console.error("Audio blocked or file missing:", e);
+    alert("Music didn't load. Your song.mp3 is not being served correctly by GitHub Pages (wrong name/path or Pages folder).");
   }
 
   setTimeout(() => { card.style.opacity = "0"; }, 2500);
