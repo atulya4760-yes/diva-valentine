@@ -1,107 +1,115 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Diva ❤️</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Diva ❤️</title>
 
-  <style>
-    body{
-      margin:0;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(135deg, #fde2e4, #fff);
-      overflow:hidden;
-    }
+<style>
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #fde2e4, #fff);
+    overflow:hidden;
+  }
 
-    /* background slideshow (hidden until YES) */
-    .slideshow{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      display:none;
-    }
-    .slide{
-      position:absolute;
-      inset:0;
-      background-size:cover;
-      background-position:center;
-      opacity:0;
-      transition:opacity 2s ease-in-out;
-      filter:brightness(.85);
-    }
-    .slide.active{ opacity:1; }
+  /* Slideshow background */
+  .slideshow{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    display:none;
+  }
+  .slide{
+    position:absolute;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+    opacity:0;
+    transition:opacity 2s ease-in-out;
+    filter:brightness(.85);
+  }
+  .slide.active{ opacity:1; }
 
-    /* card ALWAYS visible */
-    .card{
-      position:relative;
-      z-index:2;
-      width:min(480px, 92vw);
-      background:#fff;
-      border-radius:22px;
-      padding:34px 28px;
-      box-shadow:0 15px 40px rgba(0,0,0,.15);
-      text-align:center;
-      opacity:1 !important;  /* force visible */
-    }
+  /* Card */
+  .card{
+    position:relative;
+    z-index:2;
+    width:min(520px, 92vw);
+    background:#fff;
+    border-radius:22px;
+    padding:34px 28px;
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
+    text-align:center;
+    transition: opacity 1.2s ease;
+  }
+  h1{ margin:0 0 10px; font-size:28px; }
+  p{ margin:0 0 18px; opacity:.85; font-size:17px; }
 
-    h1{ margin:0 0 10px; font-size:28px; }
-    p{ margin:0 0 20px; opacity:.85; font-size:17px; }
+  .btns{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 
-    .btns{ display:flex; gap:14px; justify-content:center; }
+  button{
+    border:0;
+    padding:12px 20px;
+    border-radius:14px;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(0,0,0,.15);
+  }
+  #yes{ background:#ff4d6d; color:#fff; }
+  #no{ background:#f2f2f2; }
 
-    button{
-      border:0;
-      padding:12px 20px;
-      border-radius:14px;
-      font-size:16px;
-      cursor:pointer;
-      box-shadow:0 6px 16px rgba(0,0,0,.15);
-    }
+  #msg{
+    margin-top:16px;
+    font-size:18px;
+    font-weight:600;
+    display:none;
+  }
 
-    #yes{ background:#ff4d6d; color:#fff; }
-    #no{ background:#f2f2f2; }
+  /* Music fallback button */
+  #playBtn{
+    display:none;
+    margin-top:14px;
+    background:#111;
+    color:#fff;
+  }
 
-    #msg{
-      margin-top:18px;
-      font-size:18px;
-      font-weight:600;
-      display:none;
-    }
+  /* Final line (ONLY shown after card fades) */
+  .final-line{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    font-weight:700;
+    color:#fff;
+    text-align:center;
+    opacity:0;
+    transition:opacity 2.5s ease;
+    z-index:3;
+    text-shadow:0 6px 26px rgba(0,0,0,.65);
+    padding:24px;
+    pointer-events:none;
+  }
 
-    .final-line{
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:30px;
-      font-weight:600;
-      color:#fff;
-      text-align:center;
-      opacity:0;
-      transition:opacity 3s ease;
-      z-index:3;
-      text-shadow:0 4px 20px rgba(0,0,0,.6);
-      padding:24px;
-      pointer-events:none;
-    }
-
-    .heart{
-      position:fixed;
-      font-size:20px;
-      animation: floatUp 3s ease forwards;
-      pointer-events:none;
-      z-index:4;
-    }
-    @keyframes floatUp{
-      from{ transform:translateY(0) scale(1); opacity:1; }
-      to{ transform:translateY(-160px) scale(1.4); opacity:0; }
-    }
-  </style>
+  /* Hearts */
+  .heart{
+    position:fixed;
+    font-size:20px;
+    animation: floatUp 3s ease forwards;
+    pointer-events:none;
+    z-index:4;
+  }
+  @keyframes floatUp{
+    from{ transform:translateY(0) scale(1); opacity:1; }
+    to{ transform:translateY(-160px) scale(1.4); opacity:0; }
+  }
+</style>
 </head>
 
 <body>
@@ -126,78 +134,105 @@
     </div>
 
     <div id="msg"></div>
+    <button id="playBtn">Play the song 🎶</button>
   </div>
 
   <div class="final-line" id="finalLine">
     Year 3 with Diva… here we go. ❤️
   </div>
 
-  <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const msg = document.getElementById("msg");
-    const music = document.getElementById("music");
-    const slideshow = document.getElementById("slideshow");
-    const slides = document.querySelectorAll(".slide");
-    const card = document.getElementById("card");
-    const finalLine = document.getElementById("finalLine");
+<script>
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+  const msg = document.getElementById("msg");
+  const music = document.getElementById("music");
+  const playBtn = document.getElementById("playBtn");
+  const slideshow = document.getElementById("slideshow");
+  const slides = document.querySelectorAll(".slide");
+  const card = document.getElementById("card");
+  const finalLine = document.getElementById("finalLine");
 
-    // No button runs away (laptop/hover)
-    noBtn.addEventListener("mouseenter", () => {
-      const pad = 20;
-      const maxX = window.innerWidth - noBtn.offsetWidth - pad;
-      const maxY = window.innerHeight - noBtn.offsetHeight - pad;
-      noBtn.style.position = "fixed";
-      noBtn.style.left = Math.max(pad, Math.random() * maxX) + "px";
-      noBtn.style.top  = Math.max(pad, Math.random() * maxY) + "px";
-    });
+  // No button runs away (hover)
+  noBtn.addEventListener("mouseenter", () => {
+    const pad = 20;
+    const maxX = window.innerWidth - noBtn.offsetWidth - pad;
+    const maxY = window.innerHeight - noBtn.offsetHeight - pad;
+    noBtn.style.position = "fixed";
+    noBtn.style.left = Math.max(pad, Math.random() * maxX) + "px";
+    noBtn.style.top  = Math.max(pad, Math.random() * maxY) + "px";
+  });
 
-    yesBtn.addEventListener("click", () => {
-      // show slideshow
-      slideshow.style.display = "block";
-
-      // play music + fade in
-      music.volume = 0;
-      music.play().catch(()=>{});
-      let vol = 0;
-      const fade = setInterval(() => {
-        if (vol < 0.8) { vol += 0.05; music.volume = vol; }
-        else clearInterval(fade);
-      }, 250);
-
-      // start slideshow loop
-      let i = 0;
-      slides.forEach(s => s.classList.remove("active"));
-      slides[i].classList.add("active");
-      setInterval(() => {
-        slides[i].classList.remove("active");
-        i = (i + 1) % slides.length;
-        slides[i].classList.add("active");
-      }, 4000);
-
-      // message
-      msg.style.display = "block";
-      msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
-
-      // fade card + show final line
-      setTimeout(() => { card.style.opacity = "0"; }, 2500);
-      setTimeout(() => { finalLine.style.opacity = "1"; }, 5000);
-
-      popHearts();
-    });
-
-    function popHearts(){
-      for(let i=0;i<25;i++){
-        const h = document.createElement("div");
-        h.className = "heart";
-        h.textContent = ["❤️","💖","💘","💕"][Math.floor(Math.random()*4)];
-        h.style.left = Math.random()*100 + "%";
-        h.style.top = "70%";
-        document.body.appendChild(h);
-        setTimeout(()=>h.remove(), 3000);
-      }
+  function tryPlayMusic(){
+    music.volume = 0.8; // set target
+    const p = music.play();
+    if (p && typeof p.then === "function") {
+      p.then(() => {
+        playBtn.style.display = "none";
+      }).catch(() => {
+        // Browser blocked it -> show fallback play button
+        playBtn.style.display = "inline-block";
+      });
     }
-  </script>
+  }
+
+  playBtn.addEventListener("click", () => {
+    tryPlayMusic();
+  });
+
+  yesBtn.addEventListener("click", () => {
+    // Start background slideshow
+    slideshow.style.display = "block";
+
+    // Start slideshow loop
+    let i = 0;
+    slides.forEach(s => s.classList.remove("active"));
+    slides[i].classList.add("active");
+    setInterval(() => {
+      slides[i].classList.remove("active");
+      i = (i + 1) % slides.length;
+      slides[i].classList.add("active");
+    }, 4000);
+
+    // Hide No + change Yes
+    noBtn.style.display = "none";
+    yesBtn.textContent = "Forever ♾️";
+    yesBtn.disabled = true;
+
+    // Message
+    msg.style.display = "block";
+    msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
+
+    // Try play music (Brave may block; fallback button appears)
+    tryPlayMusic();
+
+    // Hearts
+    popHearts();
+
+    // Fade card out AFTER a moment
+    setTimeout(() => {
+      card.style.opacity = "0";
+      // remove it from layout so final line never overlaps
+      setTimeout(() => { card.style.display = "none"; }, 1300);
+    }, 2800);
+
+    // Show final line after card is gone
+    setTimeout(() => {
+      finalLine.style.opacity = "1";
+    }, 4500);
+  });
+
+  function popHearts(){
+    for(let i=0;i<25;i++){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = ["❤️","💖","💘","💕"][Math.floor(Math.random()*4)];
+      h.style.left = Math.random()*100 + "%";
+      h.style.top = "70%";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 3000);
+    }
+  }
+</script>
 
 </body>
 </html>
