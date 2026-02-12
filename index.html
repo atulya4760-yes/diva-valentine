@@ -17,6 +17,7 @@ body{
   overflow:hidden;
 }
 
+/* SLIDESHOW */
 .slideshow{
   position:fixed;
   inset:0;
@@ -34,16 +35,50 @@ body{
 }
 .slide.active{ opacity:1; }
 
+/* HEARTS */
+.hearts{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+  overflow:hidden;
+}
+.heart{
+  position:absolute;
+  bottom:-40px;
+  opacity:0.7;
+  animation: floatUp linear infinite;
+}
+@keyframes floatUp{
+  from{ transform:translateY(0) scale(1); opacity:0; }
+  10%{ opacity:.8; }
+  to{ transform:translateY(-110vh) scale(1.4); opacity:0; }
+}
+
+/* CONFETTI */
+.confetti{
+  position:fixed;
+  width:10px;
+  height:14px;
+  top:-20px;
+  z-index:4;
+  animation: confettiFall 1.8s ease-out forwards;
+}
+@keyframes confettiFall{
+  to{ transform:translate(var(--dx),110vh) rotate(720deg); opacity:0; }
+}
+
+/* CARD */
 .card{
   position:relative;
   z-index:2;
-  width:min(520px, 92vw);
+  width:min(520px,92vw);
   background:white;
   padding:36px;
   border-radius:22px;
   box-shadow:0 15px 40px rgba(0,0,0,.15);
   text-align:center;
-  transition: opacity 1.2s ease;
+  transition:opacity 1.2s ease;
 }
 
 h1{ margin:0 0 12px; font-size:28px; }
@@ -62,29 +97,19 @@ button{
   font-size:16px;
   cursor:pointer;
   box-shadow:0 6px 16px rgba(0,0,0,.15);
+  transition:transform .2s ease;
 }
+button:hover{ transform:scale(1.05); }
 
 #yes{ background:#ff4d6d; color:white; }
 #no{ background:#f2f2f2; }
 
 #msg{
-  margin-top:16px;
-  font-size:18px;
+  margin-top:20px;
+  font-size:20px;
   font-weight:600;
-  display:none;
+  min-height:30px;
 }
-
-/* show a tiny test player so you can confirm file loads */
-.test-audio{
-  margin-top:14px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  align-items:center;
-  font-size:13px;
-  opacity:.85;
-}
-.test-audio a{ color:#ff4d6d; text-decoration:none; font-weight:600; }
 
 .final-line{
   position:fixed;
@@ -115,9 +140,7 @@ button{
   <div class="slide" style="background-image:url('img5.jpg')"></div>
 </div>
 
-<audio id="bgm" preload="auto" loop>
-  <source src="./song.mp3" type="audio/mpeg">
-</audio>
+<div class="hearts" id="hearts"></div>
 
 <div class="card" id="card">
   <h1>Diva ❤️</h1>
@@ -128,12 +151,6 @@ button{
     <button id="no">No 😅</button>
   </div>
 
-  <div class="test-audio">
-    <div>Music test (should work if the file is hosted correctly):</div>
-    <audio controls preload="none" src="./song.mp3"></audio>
-    <a href="./song.mp3" target="_blank" rel="noopener">Open song.mp3 directly</a>
-  </div>
-
   <div id="msg"></div>
 </div>
 
@@ -142,51 +159,87 @@ button{
 </div>
 
 <script>
-const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
-const card = document.getElementById("card");
-const slideshow = document.getElementById("slideshow");
-const slides = document.querySelectorAll(".slide");
-const msg = document.getElementById("msg");
-const finalLine = document.getElementById("finalLine");
-const bgm = document.getElementById("bgm");
+const yesBtn=document.getElementById("yes");
+const noBtn=document.getElementById("no");
+const card=document.getElementById("card");
+const slideshow=document.getElementById("slideshow");
+const slides=document.querySelectorAll(".slide");
+const msg=document.getElementById("msg");
+const finalLine=document.getElementById("finalLine");
+const hearts=document.getElementById("hearts");
 
-noBtn.addEventListener("mouseenter", () => {
-  const pad = 20;
-  const maxX = window.innerWidth - noBtn.offsetWidth - pad;
-  const maxY = window.innerHeight - noBtn.offsetHeight - pad;
-  noBtn.style.position = "fixed";
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top  = Math.random() * maxY + "px";
+/* FLOATING HEARTS */
+function spawnHearts(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent=["💗","💖","💘","💕","❤️"][Math.floor(Math.random()*5)];
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDuration=(4+Math.random()*4)+"s";
+    h.style.fontSize=(16+Math.random()*24)+"px";
+    hearts.appendChild(h);
+    setTimeout(()=>h.remove(),9000);
+  },250);
+}
+
+/* CONFETTI */
+function confettiBurst(){
+  for(let i=0;i<80;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=["#ff4d6d","#ffb703","#8ecae6","#b5179e","#ffd6e0"][Math.floor(Math.random()*5)];
+    c.style.setProperty("--dx",(Math.random()*600-300)+"px");
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2000);
+  }
+}
+
+/* TYPEWRITER */
+function typeWriter(text, element, speed=55){
+  let i=0;
+  function type(){
+    if(i<text.length){
+      element.textContent+=text.charAt(i);
+      i++;
+      setTimeout(type,speed);
+    }
+  }
+  type();
+}
+
+/* RUN ON YES */
+yesBtn.addEventListener("click",()=>{
+  noBtn.style.display="none";
+
+  slideshow.style.display="block";
+  let i=0;
+  slides[i].classList.add("active");
+  setInterval(()=>{
+    slides[i].classList.remove("active");
+    i=(i+1)%slides.length;
+    slides[i].classList.add("active");
+  },4000);
+
+  spawnHearts();
+  confettiBurst();
+
+  msg.textContent="";
+  typeWriter("I love you my angel, you will forever be my valentine ❤️",msg);
+
+  setTimeout(()=>card.style.opacity="0",2500);
+  setTimeout(()=>card.style.display="none",3700);
+  setTimeout(()=>finalLine.style.opacity="1",4500);
 });
 
-yesBtn.addEventListener("click", async () => {
-  noBtn.style.display = "none";
-
-  slideshow.style.display = "block";
-  let i = 0;
-  slides[i].classList.add("active");
-
-  setInterval(() => {
-    slides[i].classList.remove("active");
-    i = (i + 1) % slides.length;
-    slides[i].classList.add("active");
-  }, 4000);
-
-  msg.style.display = "block";
-  msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
-
-  try {
-    bgm.volume = 0.7;
-    await bgm.play();
-  } catch (e) {
-    console.error("Audio blocked or file missing:", e);
-    alert("Music didn't load. Your song.mp3 is not being served correctly by GitHub Pages (wrong name/path or Pages folder).");
-  }
-
-  setTimeout(() => { card.style.opacity = "0"; }, 2500);
-  setTimeout(() => { card.style.display = "none"; }, 3700);
-  setTimeout(() => { finalLine.style.opacity = "1"; }, 4500);
+/* RUNNING BUTTON */
+noBtn.addEventListener("mouseenter",()=>{
+  const pad=20;
+  const maxX=window.innerWidth-noBtn.offsetWidth-pad;
+  const maxY=window.innerHeight-noBtn.offsetHeight-pad;
+  noBtn.style.position="fixed";
+  noBtn.style.left=Math.random()*maxX+"px";
+  noBtn.style.top=Math.random()*maxY+"px";
 });
 </script>
 
