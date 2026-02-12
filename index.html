@@ -103,8 +103,10 @@ button{
   <div class="slide" style="background-image:url('img5.jpg')"></div>
 </div>
 
-<!-- YouTube player container -->
-<div id="player" style="display:none;"></div>
+<!-- Background Music -->
+<audio id="bgm" preload="auto" loop>
+  <source src="./music.mp3" type="audio/mpeg">
+</audio>
 
 <div class="card" id="card">
   <h1>Diva ❤️</h1>
@@ -122,22 +124,7 @@ button{
   Year 3 with Diva… here we go. ❤️
 </div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
-
 <script>
-let player;
-
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('player', {
-    height: '0',
-    width: '0',
-    videoId: 'h3T_WxwR9Yg', // Lady - D'Angelo
-    playerVars: {
-      'playsinline': 1
-    }
-  });
-}
-
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const card = document.getElementById("card");
@@ -145,6 +132,7 @@ const slideshow = document.getElementById("slideshow");
 const slides = document.querySelectorAll(".slide");
 const msg = document.getElementById("msg");
 const finalLine = document.getElementById("finalLine");
+const bgm = document.getElementById("bgm");
 
 noBtn.addEventListener("mouseenter", () => {
   const pad = 20;
@@ -155,10 +143,11 @@ noBtn.addEventListener("mouseenter", () => {
   noBtn.style.top  = Math.random() * maxY + "px";
 });
 
-yesBtn.addEventListener("click", () => {
+yesBtn.addEventListener("click", async () => {
 
   noBtn.style.display = "none";
 
+  // Start slideshow
   slideshow.style.display = "block";
   let i = 0;
   slides[i].classList.add("active");
@@ -172,8 +161,12 @@ yesBtn.addEventListener("click", () => {
   msg.style.display = "block";
   msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
 
-  if(player && player.playVideo){
-    player.playVideo();
+  // Play music (Brave-safe because it's inside click)
+  try {
+    bgm.volume = 0.7;
+    await bgm.play();
+  } catch (e) {
+    console.error("Audio blocked:", e);
   }
 
   setTimeout(() => { card.style.opacity = "0"; }, 2500);
