@@ -6,98 +6,83 @@
 <title>Diva ❤️</title>
 
 <style>
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: linear-gradient(135deg, #fde2e4, #fff);
-  overflow:hidden;
-}
+  body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #fde2e4, #fff);
+    overflow:hidden;
+  }
 
-.slideshow{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  display:none;
-}
-.slide{
-  position:absolute;
-  inset:0;
-  background-size:cover;
-  background-position:center;
-  opacity:0;
-  transition:opacity 2s ease-in-out;
-  filter:brightness(.85);
-}
-.slide.active{ opacity:1; }
+  .slideshow{ position:fixed; inset:0; z-index:0; display:none; }
+  .slide{
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+    opacity:0; transition:opacity 2s ease-in-out;
+    filter:brightness(.85);
+  }
+  .slide.active{ opacity:1; }
 
-.card{
-  position:relative;
-  z-index:2;
-  width:min(500px, 92vw);
-  background:white;
-  padding:36px;
-  border-radius:22px;
-  box-shadow:0 15px 40px rgba(0,0,0,.15);
-  text-align:center;
-  transition: opacity 1.2s ease;
-}
+  .card{
+    position:relative; z-index:2;
+    width:min(500px, 92vw);
+    background:white;
+    padding:36px;
+    border-radius:22px;
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
+    text-align:center;
+    transition: opacity 1.2s ease;
+  }
 
-h1{ margin:0 0 12px; font-size:28px; }
-p{ margin:0 0 22px; font-size:17px; opacity:.85; }
+  h1{ margin:0 0 12px; font-size:28px; }
+  p{ margin:0 0 22px; font-size:17px; opacity:.85; }
 
-.btns{
-  display:flex;
-  gap:14px;
-  justify-content:center;
-}
+  .btns{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 
-button{
-  border:0;
-  padding:12px 22px;
-  border-radius:14px;
-  font-size:16px;
-  cursor:pointer;
-  box-shadow:0 6px 16px rgba(0,0,0,.15);
-}
+  button{
+    border:0;
+    padding:12px 22px;
+    border-radius:14px;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(0,0,0,.15);
+  }
 
-#yes{ background:#ff4d6d; color:white; }
-#no{ background:#f2f2f2; }
+  #yes{ background:#ff4d6d; color:white; }
+  #no{ background:#f2f2f2; }
 
-#msg{
-  margin-top:16px;
-  font-size:18px;
-  font-weight:600;
-  display:none;
-}
+  #msg{ margin-top:16px; font-size:18px; font-weight:600; display:none; }
 
-.final-line{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:32px;
-  font-weight:700;
-  color:white;
-  text-align:center;
-  opacity:0;
-  transition:opacity 2.5s ease;
-  z-index:3;
-  text-shadow:0 6px 26px rgba(0,0,0,.65);
-  pointer-events:none;
-}
+  #playBtn{
+    display:none;
+    margin-top:14px;
+    background:#111; color:#fff;
+  }
 
-/* Hidden YouTube player */
-#player{
-  position:absolute;
-  width:0;
-  height:0;
-  border:0;
-}
+  .final-line{
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:32px; font-weight:700;
+    color:white; text-align:center;
+    opacity:0; transition:opacity 2.5s ease;
+    z-index:3;
+    text-shadow:0 6px 26px rgba(0,0,0,.65);
+    pointer-events:none;
+    padding:24px;
+  }
+
+  .heart{
+    position:fixed; font-size:20px;
+    animation: floatUp 3s ease forwards;
+    pointer-events:none; z-index:4;
+  }
+  @keyframes floatUp{
+    from{ transform:translateY(0); opacity:1;}
+    to{ transform:translateY(-160px); opacity:0;}
+  }
 </style>
 </head>
 
@@ -111,12 +96,8 @@ button{
   <div class="slide" style="background-image:url('img5.jpg')"></div>
 </div>
 
-<!-- Hidden YouTube player -->
-<iframe
-  id="player"
-  src="https://www.youtube.com/embed/h3T_WxwR9Yg?enablejsapi=1"
-  allow="autoplay"
-></iframe>
+<!-- We'll set this audio src dynamically via Blob -->
+<audio id="music"></audio>
 
 <div class="card" id="card">
   <h1>Diva ❤️</h1>
@@ -128,6 +109,7 @@ button{
   </div>
 
   <div id="msg"></div>
+  <button id="playBtn">Play “Lady” 🎶</button>
 </div>
 
 <div class="final-line" id="finalLine">
@@ -135,50 +117,94 @@ button{
 </div>
 
 <script>
-const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
-const card = document.getElementById("card");
-const slideshow = document.getElementById("slideshow");
-const slides = document.querySelectorAll(".slide");
-const msg = document.getElementById("msg");
-const finalLine = document.getElementById("finalLine");
-const player = document.getElementById("player");
+  const yesBtn = document.getElementById("yes");
+  const noBtn = document.getElementById("no");
+  const card = document.getElementById("card");
+  const slideshow = document.getElementById("slideshow");
+  const slides = document.querySelectorAll(".slide");
+  const music = document.getElementById("music");
+  const msg = document.getElementById("msg");
+  const finalLine = document.getElementById("finalLine");
+  const playBtn = document.getElementById("playBtn");
 
-noBtn.addEventListener("mouseenter", () => {
-  const pad = 20;
-  const maxX = window.innerWidth - noBtn.offsetWidth - pad;
-  const maxY = window.innerHeight - noBtn.offsetHeight - pad;
-  noBtn.style.position = "fixed";
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top  = Math.random() * maxY + "px";
-});
+  let musicReady = false;
 
-yesBtn.addEventListener("click", () => {
+  async function loadMusicAsBlob(){
+    if (musicReady) return;
+    // Fetch MP3 and force correct MIME type as audio/mpeg
+    const res = await fetch("song.mp3", { cache: "no-store" });
+    const buf = await res.arrayBuffer();
+    const blob = new Blob([buf], { type: "audio/mpeg" });
+    music.src = URL.createObjectURL(blob);
+    musicReady = true;
+  }
 
-  noBtn.style.display = "none";
+  async function playMusic(){
+    try{
+      await loadMusicAsBlob();
+      music.volume = 0.85;
+      await music.play();
+      playBtn.style.display = "none";
+    } catch(e){
+      // If blocked or fails, show manual button
+      playBtn.style.display = "inline-block";
+    }
+  }
 
-  slideshow.style.display = "block";
-  let i = 0;
-  slides[i].classList.add("active");
+  playBtn.addEventListener("click", async () => {
+    await playMusic();
+  });
 
-  setInterval(() => {
-    slides[i].classList.remove("active");
-    i = (i + 1) % slides.length;
+  noBtn.addEventListener("mouseenter", () => {
+    const pad = 20;
+    const maxX = window.innerWidth - noBtn.offsetWidth - pad;
+    const maxY = window.innerHeight - noBtn.offsetHeight - pad;
+    noBtn.style.position = "fixed";
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top  = Math.random() * maxY + "px";
+  });
+
+  yesBtn.addEventListener("click", async () => {
+    noBtn.style.display = "none";
+
+    // Start slideshow
+    slideshow.style.display = "block";
+    let i = 0;
+    slides.forEach(s => s.classList.remove("active"));
     slides[i].classList.add("active");
-  }, 4000);
+    setInterval(() => {
+      slides[i].classList.remove("active");
+      i = (i + 1) % slides.length;
+      slides[i].classList.add("active");
+    }, 4000);
 
-  // Autoplay YouTube
-  player.src += "&autoplay=1";
+    // Message
+    msg.style.display = "block";
+    msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
 
-  msg.style.display = "block";
-  msg.textContent = "I choose you. Today. Tomorrow. Always. 💞";
+    // Try to play music (Blob method)
+    await playMusic();
 
-  setTimeout(() => { card.style.opacity = "0"; }, 2500);
-  setTimeout(() => { card.style.display = "none"; }, 3700);
-  setTimeout(() => { finalLine.style.opacity = "1"; }, 4500);
-});
+    // Fade card, then show final line
+    setTimeout(() => { card.style.opacity = "0"; }, 2500);
+    setTimeout(() => { card.style.display = "none"; }, 3700);
+    setTimeout(() => { finalLine.style.opacity = "1"; }, 4500);
+
+    popHearts();
+  });
+
+  function popHearts(){
+    for(let i=0;i<25;i++){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = ["❤️","💖","💘","💕"][Math.floor(Math.random()*4)];
+      h.style.left = Math.random()*100 + "%";
+      h.style.top = "70%";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 3000);
+    }
+  }
 </script>
 
 </body>
 </html>
-
